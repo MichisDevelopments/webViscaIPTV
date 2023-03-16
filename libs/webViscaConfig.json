@@ -1,0 +1,172 @@
+{
+    "cameras": [
+        {
+            "IP": "192.168.0.101",
+            "NAME": "Hauptkamera",
+            "PORT": 1259
+        },
+        {
+            "IP": "192.168.0.102",
+            "NAME": "Altarkamera",
+            "PORT": 1259
+        }
+    ],
+    "presets": [
+        {
+            "CAMERA": 1,
+            "NAME": "1. Fenster",
+            "PAN": 65179,
+            "PANSPEED": 6,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 144,
+            "TILTSPEED": 1,
+            "WIDEZOOM": 1,
+            "ZOOM": 0
+        },
+        {
+            "CAMERA": 1,
+            "NAME": "Fenster",
+            "PAN": 65180,
+            "PANSPEED": 6,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 144,
+            "TILTSPEED": 1,
+            "WIDEZOOM": 1,
+            "ZOOM": 4423
+        },
+        {
+            "CAMERA": 1,
+            "NAME": "Fenster Zoom",
+            "PAN": 65178,
+            "PANSPEED": 24,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 106,
+            "TILTSPEED": 20,
+            "WIDEZOOM": 0,
+            "ZOOM": 14899
+        },
+        {
+            "CAMERA": 0,
+            "NAME": "Gasometer ",
+            "PAN": 0,
+            "PANSPEED": 12,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 0,
+            "TILTSPEED": 0,
+            "WIDEZOOM": 1,
+            "ZOOM": 0
+        },
+        {
+            "CAMERA": 1,
+            "NAME": "Socke",
+            "PAN": 202,
+            "PANSPEED": 24,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 186,
+            "TILTSPEED": 20,
+            "WIDEZOOM": 1,
+            "ZOOM": 11452
+        },
+        {
+            "CAMERA": 1,
+            "NAME": "Socke 2",
+            "PAN": 202,
+            "PANSPEED": 12,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 186,
+            "TILTSPEED": 10,
+            "WIDEZOOM": 1,
+            "ZOOM": 0
+        },
+        {
+            "CAMERA": 0,
+            "NAME": "Socke Langsam",
+            "PAN": 0,
+            "PANSPEED": 1,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 0,
+            "TILTSPEED": 1,
+            "WIDEZOOM": 1,
+            "ZOOM": 0
+        },
+        {
+            "CAMERA": 0,
+            "NAME": "Socke Schnell",
+            "PAN": 0,
+            "PANSPEED": 24,
+            "PREPRESET": "",
+            "SYNCZOOM": 1,
+            "TILT": 0,
+            "TILTSPEED": 20,
+            "WIDEZOOM": 0,
+            "ZOOM": 0
+        },
+        {
+            "CAMERA": 1,
+            "NAME": "Socke Totale",
+            "PAN": 198,
+            "PANSPEED": 12,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 136,
+            "TILTSPEED": 10,
+            "WIDEZOOM": 1,
+            "ZOOM": 10567
+        },
+        {
+            "CAMERA": 0,
+            "NAME": "Standard",
+            "PAN": 7,
+            "PANSPEED": 12,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 223,
+            "TILTSPEED": 10,
+            "WIDEZOOM": 1,
+            "ZOOM": 0
+        },
+        {
+            "CAMERA": 0,
+            "NAME": "Uhr",
+            "PAN": 64297,
+            "PANSPEED": 1,
+            "PREPRESET": "",
+            "SYNCZOOM": 0,
+            "TILT": 283,
+            "TILTSPEED": 1,
+            "WIDEZOOM": 1,
+            "ZOOM": 14008
+        },
+        {
+            "CAMERA": 0,
+            "NAME": "Uhr (schnell)",
+            "PAN": 64296,
+            "PANSPEED": 24,
+            "PREPRESET": "",
+            "SYNCZOOM": 1,
+            "TILT": 283,
+            "TILTSPEED": 20,
+            "WIDEZOOM": 0,
+            "ZOOM": 14008
+        },
+        {
+            "CAMERA": 1,
+            "NAME": "Wand",
+            "PAN": 988,
+            "PANSPEED": 24,
+            "PREPRESET": "",
+            "SYNCZOOM": 1,
+            "TILT": 261,
+            "TILTSPEED": 20,
+            "WIDEZOOM": 0,
+            "ZOOM": 835
+        }
+    ]
+}

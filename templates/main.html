@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang='de'>
+    <head>
+        <title>{{title}}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/joystick.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/webVisca.js') }}"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/webVisca.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.theme.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='images/bootstrap-icons.css') }}">
+
+        <script>   $SCRIPT_ROOT = {{ request.script_root|tojson }}; </script>
+    </head>
+
+    <body>
+
+        <div class="modal fade" id="executePreset" tabindex="-1" role="dialog" aria-labelledby=executePresetLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Position anfahren.</h5>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success"  id="execPreset">Ausführen</button>
+                        <button type="button" class="btn btn-secondary" id="abortExecPreset" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deletePreset" tabindex="-1" role="dialog" aria-labelledby="deletePresetLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deletePresetLabel">Position löschen</h5>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-danger"    data-dismiss="modal" id="executeDeletePreset">Löschen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="edtPreset" tabindex="-1" role="dialog" aria-labelledby="edtPresetLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edtPresetLabel">Aktuelle Position bearbeiten</h5>
+                    </div>
+                    <form id="edtPresetForm" name="presetForm" role="form" method="get">
+                        <div class="modal-body">
+                              <div class="form-group">
+                                    <label for="PresetName">Name</label>
+                                    <input type="text" class="form-control" id="edtPresetName" aria-describedby="presetHelp" >
+                                    <small id="edtpresetHelp" class="form-text text-muted">Griffiger Name für die abgespeicherte Kameraposition.</small>
+                                    <br>
+                                    <label for="PSpeed">Drehgeschwindigkeit der Kamera</label>
+                                    <select class="form-control" id="edtPSpeed" aria-describedby="PSpeedHelp">
+                                        <option value="1">am langsamsten</option>
+                                        <option value="3">noch langsamer</option>
+                                        <option value="6">langsamer</option>
+                                        <option value="9">etwas langsamer</option>
+                                        <option value="12">normal</option>
+                                        <option value="15">etwas schneller</option>
+                                        <option value="18">schneller</option>
+                                        <option value="21">noch schneller</option>
+                                        <option value="24">am schnellsten</option>
+                                    </select>
+                                    <br>
+                                    <label for="edtTSpeed">Neigegeschwindigkeit der Kamera</label>
+                                    <select class="form-control" id="edtTSpeed" aria-describedby="TSpeedHelp">
+                                        <option value="1">am langsamsten</option>
+                                        <option value="3">noch langsamer</option>
+                                        <option value="5">langsamer</option>
+                                        <option value="7">etwas langsamer</option>
+                                        <option value="10">normal</option>
+                                        <option value="12">etwas schneller</option>
+                                        <option value="15">schneller</option>
+                                        <option value="17">noch schneller</option>
+                                        <option value="20">am schnellsten</option>
+                                    </select>
+                                    <br>
+                                    <div class="custom-control ">
+                                      <input type="checkbox" class="" id="edtsynczoom">
+                                      <label class="" for="synczoom">Zoom während der Bewegung?</label>
+                                    </div>
+
+                                    <div class="custom-control">
+                                      <input type="checkbox" class="" id="edtwidezoom">
+                                      <label class="" for="widezoom">Zoom in die Totale vor der Bewegung?</label>
+                                    </div>
+                                    <br>
+                                    <div class="custom-control danger">
+                                      <input type="checkbox" class="" id="changeptz">
+                                      <label class="" for="changeptz">Aktuelle PTZ-Position übernehmen?</label>
+                                    </div>
+                                    <br>
+                                    <label for="edtprePreset">Fahrt über folgende Position</label>
+                                    <select class="form-control" id="edtprePreset" aria-describedby="edtprePresetHelp">
+
+                                    </select>
+                                    <input type="hidden" id="edtPresetId" value="">
+                                    <input type="hidden" id="edtCameraId" value="">
+                                    <small id="edtprePresetHelp" class="form-text text-muted">Die Zielposition wird über die hier gewählte Position angefahren.</small>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success"   id="execEdtPreset">Speichern</button>
+                            <button type="button" class="btn btn-secondary" id="abortExecEdtPreset" data-dismiss="modal">Abbrechen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addPreset" tabindex="-1" role="dialog" aria-labelledby="addPresetLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPresetLabel">Aktuelle Position speichern</h5>
+                    </div>
+                    <form id="presetForm" name="presetForm" role="form" method="get">
+                        <div class="modal-body">
+                              <div class="form-group">
+                                    <label for="PresetName">Name</label>
+                                    <input type="text" class="form-control" id="PresetName" aria-describedby="presetHelp" >
+                                    <small id="presetHelp" class="form-text text-muted">Griffiger Name für die abgespeicherte Kameraposition.</small>
+                                    <br>
+                                    <label for="PSpeed">Drehgeschwindigkeit der Kamera</label>
+                                    <select class="form-control" id="PSpeed" aria-describedby="PSpeedHelp">
+                                        <option value="1">am langsamsten</option>
+                                        <option value="3">noch langsamer</option>
+                                        <option value="6">langsamer</option>
+                                        <option value="9">etwas langsamer</option>
+                                        <option value="12" selected>normal</option>
+                                        <option value="15">etwas schneller</option>
+                                        <option value="18">schneller</option>
+                                        <option value="21">noch schneller</option>
+                                        <option value="24">am schnellsten</option>
+                                    </select>
+                                    <br>
+                                    <label for="TSpeed">Neigegeschwindigkeit der Kamera</label>
+                                    <select class="form-control" id="TSpeed" aria-describedby="TSpeedHelp">
+                                        <option value="1">am langsamsten</option>
+                                        <option value="3">noch langsamer</option>
+                                        <option value="5">langsamer</option>
+                                        <option value="7">etwas langsamer</option>
+                                        <option value="10" selected>normal</option>
+                                        <option value="12">etwas schneller</option>
+                                        <option value="15">schneller</option>
+                                        <option value="17">noch schneller</option>
+                                        <option value="20">am schnellsten</option>
+                                    </select>
+                                    <br>
+                                    <div class="custom-control ">
+                                      <input type="checkbox" class="" id="synczoom">
+                                      <label class="-label" for="synczoom">Zoom während der Bewegung?</label>
+                                    </div>
+                                    <br>
+                                    <div class="custom-control ">
+                                      <input type="checkbox" class="" id="widezoom">
+                                      <label class="" for="widezoom">Zoom in die Totale vor der Bewegung?</label>
+                                    </div>
+                                    <br>
+                                    <label for="prePreset">Fahrt über folgende Position</label>
+                                    <select class="form-control" id="prePreset" aria-describedby="prePresetHelp">
+
+                                    </select>
+                                    <small id="prePresetHelp" class="form-text text-muted">Die Zielposition wird über die hier gewählte Position angefahren.</small>
+
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                            <button type="button" class="btn btn-primary"  data-dismiss="modal" id="executeAddPreset">Speichern</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addCamera" tabindex="-1" role="dialog" aria-labelledby="addCameraLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCameraLabel">Kamera hinzufügen</h5>
+                    </div>
+                    <form id="cameraForm" name="cameraForm" role="form" method="get">
+                        <div class="modal-body">
+                              <div class="form-group">
+                                    <label for="CameraName">Name</label>
+                                    <input type="text" class="form-control" id="CameraName" aria-describedby="cameraHelp" >
+                                    <small id="cameraHelp" class="form-text text-muted">Griffiger Name für die Kamera.</small>
+                                    <br>
+                                    <label for="CameraIP">IP-Adresse</label>
+                                    <input type="text" class="form-control" id="CameraIP" aria-describedby="cameraIpHelp" >
+                                    <small id="cameraIpHelp" class="form-text text-muted">IP-Adresse der Kamera. Diese wird beim Einschalten kurz angezeigt.</small>
+                                    <br>
+                                    <label for="CameraPORT">Port</label>
+                                    <input type="text" class="form-control" id="CameraPORT" aria-describedby="cameraPortHelp" >
+                                    <small id="cameraPortHelp" class="form-text text-muted">Port für das Visca-Protokoll. Dieser ist in der Regel 1259.</small>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                            <button type="button" class="btn btn-primary"  data-dismiss="modal" id="executeAddCamera">Speichern</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteCamera" tabindex="-1" role="dialog" aria-labelledby="deleteCameraLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteCameraLabel">Kamera entfernen</h5>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-danger"    data-dismiss="modal" id="executeDeleteCamera">Löschen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h1>webVisca Camera Control</h1>
+
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="pills-cameras-tab" href="#nav-cameras" data-toggle="pill" role="tab" aria-controls="pills-cameras" aria-selected="true">Kamerasteuerung</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-presets-tab" href="#nav-presets" data-toggle="pill"  role="tab" aria-controls="pills-presets" aria-selected="false">Positionen</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-settings-tab" href="#nav-settings" data-toggle="pill"  role="tab" aria-controls="pills-settings" aria-selected="false">Einstellungen</a>
+              </li>
+        </ul>
+
+        <div class="input-group mb-3">
+            <select id="camera" class="custom-select custom-select-lg mb-3" size="1"></select>
+
+            <div class="input-group-append">
+                <button id="connectstatus" class="btn btn-secondary mb-3" type="button">Status</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-cameras" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="container" id="camctrl">
+                    <div class="row">
+                        <div class="col">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                          <label for="panspeed">
+                                            Drehgeschwindigkeit
+                                        </label>
+                                        <select id="panspeed" class="custom-select custom-select-lg mb-3" size="1">
+                                            <option value="0">Sehr langsam</option>
+                                            <option value="6">langsam</option>
+                                            <option selected value="12">normal</option>
+                                            <option value="18">schnell</option>
+                                            <option value="24">sehr schnell</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="tiltspeed">
+                                                Neigegeschwindigkeit
+                                        </label>
+                                        <select id="tiltspeed" class="custom-select custom-select-lg mb-3" size="1">
+                                            <option value="0">Sehr langsam</option>
+                                            <option value="5">langsam</option>
+                                            <option selected value="10">normal</option>
+                                            <option value="15">schnell</option>
+                                            <option value="20">sehr schnell</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="zoomspeed">
+                                            Zoomgeschwindigkeit
+                                        </label>
+                                        <select id="zoomspeed" class="custom-select custom-select-lg mb-3" size="1">
+                                            <option value="1">Sehr langsam</option>
+                                            <option value="2">langsam</option>
+                                            <option selected value="4">normal</option>
+                                            <option value="6">schnell</option>
+                                            <option value="7">sehr schnell</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container" id="zoomctrl">
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="button" id="TELE" class="btn btn-primary btn-lg btn-block" >Nah</button>
+                                    </div>
+
+                                    <div class="col">
+                                        <button type="button" id="WIDE" class="btn btn-secondary btn-lg btn-block" >Fern</button>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="container" id="movectrl">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div id="joyDiv" class="joyctrl"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-presets" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div style="width:100%;text-align:center;">
+
+                    <button type="button" class="btn btn-primary bi " data-toggle="modal" data-target="#addPreset">
+                        Aktuelle Position speichern
+                    </button>
+
+                </div><br>
+
+                <div id="presetlist">
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-settings" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div style="width:100%;text-align:center;">
+
+                    <button type="button" class="btn btn-primary bi " data-toggle="modal" data-target="#addCamera">
+                        Kamera hinzufügen
+                    </button>
+
+                </div><br>
+
+                <div id="cameralist">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+<div id="addNewPreset" title="Basic dialog">
+  <form>
+
+
+  </form>
+</div>
+
+
+    </body>
+</html>
